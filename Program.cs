@@ -7,7 +7,7 @@ namespace ShuffleCardSample
     {
         static void Main(string[] args)
         {
-           //var cards = ShuffleHelper.GenerateCards(52).ToList();   //純數字
+            //var cards = ShuffleHelper.GenerateCards(52).ToList();   //純數字
             var cards = ShuffleHelper.GenerateCards().ToList(); //有花色
 
             cards.WriteLine();
@@ -17,7 +17,7 @@ namespace ShuffleCardSample
             cards.WriteLine();
             Console.WriteLine();
 
-            var chunkCards = cards.SendCards();
+            var chunkCards = cards.SendCards(4);
             foreach (var chunkCard in chunkCards)
             {
                 chunkCard.WriteLine();

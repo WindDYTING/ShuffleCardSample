@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -74,9 +75,31 @@ namespace ShuffleCardSample
                 .Select((_, i) => new Card(values[i % values.Length], suits[i / values.Length]));
         }
 
-        public static IEnumerable<TSource[]> SendCards<TSource>(this IEnumerable<TSource> cards)
+        public static IEnumerable<TSource[]> SendCards<TSource>(this IEnumerable<TSource> cards, int peopleCount)
         {
-            return Chunk(cards, 13);
+            Precondition.ThrowIfNull(cards);
+            Precondition.ThrowOutOfRange(peopleCount, 1);
+
+            return SendCardsImpl(cards, peopleCount);
+        }
+
+        private static IEnumerable<TSource[]> SendCardsImpl<TSource>(IEnumerable<TSource> cards, int peopleCount)
+        {
+            var list = new List<TSource>();
+            for (var k = 0; k < peopleCount; k++)
+            {
+                using var it = cards.GetEnumerator();
+                var i = 0;
+                while (it.MoveNext())
+                {
+                    if (i % peopleCount == k)
+                        list.Add(it.Current);
+                    i++;
+                }
+
+                yield return list.ToArray();
+                list.Clear();
+            }
         }
 
         public static IEnumerable<TSource[]> Chunk<TSource>(this IEnumerable<TSource> source, int chunkSize)
